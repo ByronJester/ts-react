@@ -8,9 +8,6 @@ Imported Routes
 */
 import IndexRoutes from './routes/index.routes'
 import TodosRoutes from './routes/todos.routes'
-import createTodo from './routes/createTodo.routes'
-import doneTodo from './routes/doneTodo.routes'
-import deleteTodo from './routes/deleteTodo.routes'
 
 export class App {
     private app: Application;
@@ -38,10 +35,7 @@ export class App {
 
     routes() {
         this.app.use(IndexRoutes);
-        this.app.use('/todos', TodosRoutes);
-        this.app.use('/createTodo', createTodo);
-        this.app.use('/doneTodo', doneTodo);
-        this.app.use('/deleteTodo', deleteTodo);
+        this.app.use('/', TodosRoutes)
     }
 
     parser() {
