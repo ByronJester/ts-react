@@ -1,6 +1,5 @@
 import Knex from 'knex';
 
-// Initialize Knex
 const connection = Knex({
     client: 'mysql',
     connection: {
@@ -11,5 +10,6 @@ const connection = Knex({
         database: 'sample_app'
     }
 });
+
 
 export default connection;

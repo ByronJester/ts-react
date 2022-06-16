@@ -2,9 +2,15 @@ import express, { Application } from 'express';
 import morgan from 'morgan'
 import cors from 'cors';
 import bodyParser from 'body-parser'
+import connection from './configuration/db'
 
 /*
-Imported Routes
+* Imported Models
+*/
+import { TodosModel } from './models/TodosModel'
+
+/*
+* Imported Routes
 */
 import IndexRoutes from './routes/index.routes'
 import TodosRoutes from './routes/todos.routes'
@@ -19,6 +25,8 @@ export class App {
         this.parser();
         this.middlewares();
         this.routes();
+        this.models();
+
     }
 
     settings() {
@@ -36,6 +44,10 @@ export class App {
     routes() {
         this.app.use(IndexRoutes);
         this.app.use('/', TodosRoutes)
+    }
+
+    models() {
+        TodosModel.knex(connection);
     }
 
     parser() {

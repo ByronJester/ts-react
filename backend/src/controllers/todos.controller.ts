@@ -1,46 +1,9 @@
 import { Request, Response } from 'express'
-// import { connect } from '../configuration/database'
-import connection from '../configuration/db'
+import { TodosModel } from '../models/TodosModel'
 
 export class Todos {
-    // async getTodos(req: Request, res: Response): Promise<Response> {
-    //     const conn = await connect();
-
-    //     const todos = await conn.query("SELECT * FROM todos");
-
-    //     return res.json(todos[0]);
-    // }
-
-    // async createTodo(req: Request, res: Response): Promise<Response> {
-    //     const conn = await connect();
-
-    //     const create = await conn.query(`INSERT INTO todos (todo) VALUES ("${req.body.todo}")`);
-
-    //     return res.json(create);
-    // }
-
-    // async doneTodo(req: Request, res: Response): Promise<Response> {
-    //     const conn = await connect();
-
-    //     await conn.query(`UPDATE todos SET is_done = ${req.body.is_done} WHERE id = "${req.body.id}"`);
-
-    //     const todos = await conn.query("SELECT * FROM todos");
-
-    //     return res.json(todos[0]);
-    // }
-
-    // async deleteTodo(req: Request, res: Response): Promise<Response> {
-    //     const conn = await connect();
-
-    //     await conn.query(`DELETE FROM todos WHERE id = ${req.body.id}`);
-
-    //     const todos = await conn.query("SELECT * FROM todos");
-
-    //     return res.json(todos[0]);
-    // }
-
     async getTodos(req: Request, res: Response): Promise<Response> {
-        const todos = await connection('todos').select('*');
+        const todos = await TodosModel.query();
 
         return res.json(todos);
     }
@@ -54,9 +17,9 @@ export class Todos {
             todo
         }
 
-        await connection('todos').insert(todoReq);
+        await TodosModel.query().insert(todoReq);
 
-        const todos = await connection('todos').select('*');
+        const todos = await TodosModel.query();
 
         return res.json(todos);
     }
@@ -66,9 +29,13 @@ export class Todos {
 
         const is_done = req.body.is_done;
 
-        await connection('todos').where('id', id).update({ 'is_done': is_done });
+        await TodosModel.query()
+            .findById(id)
+            .patch({
+                is_done: is_done
+            })
 
-        const todos = await connection('todos').select('*');
+        const todos = await TodosModel.query();
 
         return res.json(todos);
     }
@@ -76,10 +43,10 @@ export class Todos {
     async deleteTodo(req: Request, res: Response): Promise<Response> {
         const id = req.body.id;
 
-        await connection('todos').where('id', id).delete();
+        await TodosModel.query().deleteById(id);
 
-        const todos = await connection('todos').select('*');
+        const todos = await TodosModel.query();
 
         return res.json(todos);
     }
-}
+}         
